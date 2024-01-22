@@ -1,0 +1,41 @@
+#!/bin/sh
+
+gcc mainB.c -o exerciseB
+
+input_data=$(cat <<EOF
+Pierre Zimmermann
+Piotr Gawrys
+Michal Klukowski
+Bauke Muller
+
+Pierre Zimmermann: 10
+Piotr Gawrys: 6
+Michal Klukowski: 14
+Bauke Muller: 7
+
+Pierre Zimmermann: 1
+Piotr Gawrys: 2
+Michal Klukowski: 3
+Bauke Muller: 4
+
+Pierre Zimmermann: 4
+Piotr Gawrys: 5
+Michal Klukowski: 6
+Bauke Muller: 3
+EOF
+)
+
+output_data=$(echo "$input_data" | ./exerciseB)
+
+expected_output="3 12"
+
+if [ "$expected_output" = "$output_data" ]; then
+    echo "Test passed! ✅ "
+else
+    echo "Test failed! ❌ "
+    echo "  Expected: $expected_output"
+    echo "  Actual  : $output_data"
+    exit 1
+fi
+
+rm exerciseB
