@@ -2,7 +2,14 @@
 
 gcc mainA.c -o exerciseA
 
-input_data="Pierre Zimmermann\nPiotr Gawrys\nMichal Klukowski\nBauke Muller"
+input_data=$(cat <<EOF
+Pierre Zimmermann
+Piotr Gawrys
+Michal Klukowski
+Bauke Muller
+EOF
+)
+
 output_data=$(echo "$input_data" | ./exerciseA)
 
 expected_output="4 57"
