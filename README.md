@@ -1,2 +1,2 @@
 # GameResultsTracker
-Completed system to record game results with flexibility for 2-player games like chess or variants with 3-4 players (e.g., bridge). Victory is achieved with 2+ points and the highest overall score in the game.
+In this exercise, I have successfully developed a system for recording game results. The system accommodates various game formats, allowing for 2-player games like chess, as well as chess variants with 3 or 4 players, or entirely different games such as bridge, with any player count. While the points earned remain flexible, victory is defined for players attaining 2 or more points and simultaneously holding the highest score in the game.
