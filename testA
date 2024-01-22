@@ -1,0 +1,19 @@
+#!/bin/sh
+
+gcc mainA.c -o exerciseA
+
+input_data="Pierre Zimmermann\nPiotr Gawrys\nMichal Klukowski\nBauke Muller"
+output_data=$(echo "$input_data" | ./exerciseA)
+
+expected_output=
+
+if [ "$expected_output" = "$output_data" ]; then
+    echo "Test passed! ✅ "
+else
+    echo "Test failed! ❌ "
+    echo "  Expected: 4 57"
+    echo "  Actual  : $output_data"
+    exit 1
+fi
+
+rm exerciseA
