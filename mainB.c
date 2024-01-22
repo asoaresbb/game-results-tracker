@@ -28,6 +28,7 @@ char** signInPlayers(int* numPlayers) {
 
     return players;
 }
+
 void freePlayers(char** players, const int numPlayers) {
     for (int i = 0; i < numPlayers; i++) {
         free(players[i]);

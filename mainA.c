@@ -36,11 +36,7 @@ void freePlayers(char** players, const int numPlayers) {
 }
 
 void printTotalPlayers(const int numPlayers) {
-    int totalPlayers = 0;
-    for (int i = 0; i < numPlayers; i++) {
-        totalPlayers++;
-    }
-    printf("%d", totalPlayers);
+    printf("%d", numPlayers);
 }
 
 void printTotalCharacters(char** players, const int numPlayers) {
