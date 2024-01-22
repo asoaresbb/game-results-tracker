@@ -2,17 +2,36 @@
 #include <stdlib.h>
 #include <string.h>
 
-char** signInPlayers(const int numPlayers) {
-    char** players = malloc(numPlayers * sizeof(char*));
+char** signInPlayers(int* numPlayers) {
+    char** players = NULL;
+    char buffer[50];
+    *numPlayers = 0;
 
-    for (int i = 0; i < numPlayers; i++) {
-        players[i] = (char*)malloc(50 * sizeof(char));
-        fgets(players[i], 50, stdin);
-        players[i][strcspn(players[i], "\n")] = 0; // Remover a nova linha
+    while (1) {
+        // Allocate memory for the next player
+        players = realloc(players, (*numPlayers + 1) * sizeof(char*));
+
+        if (fgets(buffer, sizeof(buffer), stdin) == NULL || buffer[0] == '\n') {
+            break;
+        }
+
+        buffer[strcspn(buffer, "\n")] = 0; // Remove newline
+
+        // Allocate memory for the player's name
+        players[*numPlayers] = malloc(strlen(buffer) + 1);
+        if (!players[*numPlayers]) {
+            fprintf(stderr, "Memory allocation error\n");
+            exit(EXIT_FAILURE);
+        }
+
+        // Copy the name to the allocated memory
+        strcpy(players[*numPlayers], buffer);
+
+        (*numPlayers)++;
     }
+
     return players;
 }
-
 void freePlayers(char** players, const int numPlayers) {
     for (int i = 0; i < numPlayers; i++) {
         free(players[i]);
@@ -38,12 +57,12 @@ void printTotalCharacters(char** players, const int numPlayers) {
 }
 
 int main() {
-    const int numPlayers = 4;
+    int numPlayers;
 
-    char** players = signInPlayers(numPlayers);
+    char** players = signInPlayers(&numPlayers);
 
     printTotalPlayers(numPlayers);
-    printTotalCharacters(players ,numPlayers);
+    printTotalCharacters(players, numPlayers);
 
     freePlayers(players, numPlayers);
 
