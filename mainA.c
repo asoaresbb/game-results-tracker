@@ -20,12 +20,6 @@ void freePlayers(char** players, const int numPlayers) {
     free(players);
 }
 
-void printPlayersName(char** players, const int numPlayers) {
-    for (int i = 0; i < numPlayers; i++) {
-        printf("%s\n", players[i]);
-    }
-}
-
 void printTotalPlayers(const int numPlayers) {
     int totalPlayers = 0;
     for (int i = 0; i < numPlayers; i++) {
@@ -34,7 +28,7 @@ void printTotalPlayers(const int numPlayers) {
     printf("%d", totalPlayers);
 }
 
-void countTotalCharacters(char** players, const int numPlayers) {
+void printTotalCharacters(char** players, const int numPlayers) {
     int totalCharacters = 0;
 
     for (int i = 0; i < numPlayers; i++) {
@@ -44,18 +38,12 @@ void countTotalCharacters(char** players, const int numPlayers) {
 }
 
 int main() {
-    int numPlayers;
-
-    printf("Digite o numero de jogadores:");
-    scanf("%d", &numPlayers);
-
-    getchar(); // Consume the newline character left in the buffer
+    const int numPlayers = 4;
 
     char** players = signInPlayers(numPlayers);
 
-    printPlayersName(players, numPlayers);
     printTotalPlayers(numPlayers);
-    countTotalCharacters(players ,numPlayers);
+    printTotalCharacters(players ,numPlayers);
 
     freePlayers(players, numPlayers);
 
