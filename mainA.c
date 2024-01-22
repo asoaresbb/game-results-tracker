@@ -19,10 +19,6 @@ char** signInPlayers(int* numPlayers) {
 
         // Allocate memory for the player's name
         players[*numPlayers] = malloc(strlen(buffer) + 1);
-        if (!players[*numPlayers]) {
-            fprintf(stderr, "Memory allocation error\n");
-            exit(EXIT_FAILURE);
-        }
 
         // Copy the name to the allocated memory
         strcpy(players[*numPlayers], buffer);
