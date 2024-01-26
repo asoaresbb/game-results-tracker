@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-char **signInPlayers(int *numPlayers) {
+char **readPlayers(int *numPlayers) {
     char **players = NULL;
     char buffer[50];
     *numPlayers = 0;
@@ -41,7 +41,7 @@ void freePlayers(char **players, const int numPlayers) {
 int main() {
     int numPlayers;
 
-    char **players = signInPlayers(&numPlayers);
+    char **players = readPlayers(&numPlayers);
 
     freePlayers(players, numPlayers);
 }

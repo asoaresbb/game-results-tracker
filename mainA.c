@@ -2,30 +2,23 @@
 #include <stdlib.h>
 #include <string.h>
 
-char **signInPlayers(int *numPlayers) {
+void replaceNewLineByEnfOfStr(char buffer[]) {
+    buffer[strcspn(buffer, "\n")] = '\0';
+}
+
+char **readPlayers(int *numPlayers) {
     char **players = NULL;
-    char buffer[50];
     *numPlayers = 0;
-
     while (1) {
-        // Allocate memory for the next player
+        char str[50];
         players = realloc(players, (*numPlayers + 1) * sizeof(char *));
-        if (fgets(buffer, sizeof(buffer), stdin) == NULL || buffer[0] == '\n') {
-            break;
-        }
-
-        buffer[strcspn(buffer, "\n")] = 0;
-
-        // Allocate memory for the player's name
-        players[*numPlayers] = malloc(strlen(buffer) + 1);
-
-        // Copy the name to the allocated memory
-        strcpy(players[*numPlayers], buffer);
-
+        const char *fgetsRes = fgets(str, sizeof(str), stdin);
+        if (fgetsRes == NULL || str[0] == '\n') return players;
+        replaceNewLineByEnfOfStr(str);
+        players[*numPlayers] = malloc(strlen(str) + 1);
+        strcpy(players[*numPlayers], str);
         (*numPlayers)++;
     }
-
-    return players;
 }
 
 void freePlayers(char **players, const int numPlayers) {
@@ -35,27 +28,19 @@ void freePlayers(char **players, const int numPlayers) {
     free(players);
 }
 
-void printTotalPlayers(const int numPlayers) {
-    printf("%d", numPlayers);
-}
 
-void printTotalCharacters(char **players, const int numPlayers) {
+void printResult(char **players, const int numPlayers) {
     int totalCharacters = 0;
     for (int i = 0; i < numPlayers; i++) {
         totalCharacters += strlen(players[i]);
     }
-    printf(" %d", totalCharacters);
+    printf("%d %d", numPlayers, totalCharacters);
 }
 
 int main() {
     int numPlayers;
-
-    char **players = signInPlayers(&numPlayers);
-
-    printTotalPlayers(numPlayers);
-    printTotalCharacters(players, numPlayers);
-
+    char **players = readPlayers(&numPlayers);
+    printResult(players, numPlayers);
     freePlayers(players, numPlayers);
-
     return 0;
 }
