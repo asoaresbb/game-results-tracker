@@ -1,6 +1,6 @@
 #!/bin/sh
 
-gcc mainB.c -o exerciseB
+gcc mainB.c -o exerciseB.exe
 
 input_data=$(cat <<EOF
 Pierre Zimmermann
@@ -25,7 +25,7 @@ Bauke Muller: 3
 EOF
 )
 
-output_data=$(echo "$input_data" | ./exerciseB)
+output_data=$(echo "$input_data" | ./exerciseB.exe)
 
 expected_output="3 12"
 
@@ -38,4 +38,4 @@ else
     exit 1
 fi
 
-rm exerciseB
+rm exerciseB.exe

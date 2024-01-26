@@ -14,7 +14,7 @@ char **signInPlayers(int *numPlayers) {
             break;
         }
 
-        buffer[strcspn(buffer, "\n")] = 0; // Remove newline
+        buffer[strcspn(buffer, "\n")] = 0;
 
         // Allocate memory for the player's name
         players[*numPlayers] = malloc(strlen(buffer) + 1);
