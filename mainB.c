@@ -58,22 +58,30 @@ void freePlayers(char **players, const int numPlayers) {
 }
 
 
-void freeGame(struct Score *game, int numPlayersInGame) {
-    for (int i = 0; i < numPlayersInGame; i++) {
-        free(game[i].name);
+void freeGames(struct Score **games, int numGames, int numPlayersInGame) {
+    for (int i = 0; i < numGames; i++) {
+        for (int ii = 0; ii < numPlayersInGame; ii++) {
+            free(games[i][ii].name);
+        }
     }
-    free(game);
+    free(games);
 }
 
 int main() {
     int numPlayers;
     char **players = readPlayers(&numPlayers);
+    int numGames = 0;
+    int sumPlayersInGame = 0;
     int numPlayersInGame;
     struct Score *game;
+    struct Score **games = NULL;
     while ((game = readGame(&numPlayersInGame)) != NULL) {
-        printf("%s %d", game->name, game->score);
+        games = realloc(games, (numGames + 1) * sizeof(struct Score *));
+        games[numGames] = game;
+        sumPlayersInGame += numPlayersInGame;
+        numGames++;
     }
-    freeGame(game, numPlayersInGame);
+    printf("%d %d", numGames, sumPlayersInGame);
+    freeGames(games, numGames, numPlayersInGame);
     freePlayers(players, numPlayers);
-    return 0;
 }
