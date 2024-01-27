@@ -83,6 +83,7 @@ int main() {
         numGames++;
     }
     printf("%d %d", numGames, totalPlayersPlayedGames);
+    free(game);
     freeGames(games, numGames, numPlayersPerGame);
     freePlayers(players, numPlayers);
 }
