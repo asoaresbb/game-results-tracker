@@ -26,26 +26,34 @@ struct Score {
     int score;
 };
 
+struct Game {
+    struct Score *scores;
+    int scoreCount;
+};
 
-struct Score *readGame(int *numPlayersInGame) {
-    struct Score *game = NULL;
-    *numPlayersInGame = 0;
+
+struct Game* readGame() {
+    struct Score *scores = NULL;
+    int numPlayersInGame = 0;
     while (1) {
         char str[100];
-        game = realloc(game, (*numPlayersInGame + 1) * sizeof(struct Score *));
+        scores = realloc(scores, (numPlayersInGame + 1) * sizeof(struct Score *));
         const char *fgetsRes = fgets(str, sizeof(str), stdin);
         if (fgetsRes == NULL || str[0] == '\n') {
-            if (*numPlayersInGame == 0)
+            if (numPlayersInGame == 0)
                 return NULL;
+            struct Game* game = malloc(sizeof(struct Game));
+            game->scores = scores;
+            game->scoreCount = numPlayersInGame;
             return game;
         }
         replaceNewLineByEnfOfStr(str);
         const char *name = strtok(str, ":");
         const int points = atoi(strtok(NULL, ":"));
-        game[*numPlayersInGame].name = malloc(strlen(name) + 1);
-        strcpy(game[*numPlayersInGame].name, str);
-        game[*numPlayersInGame].score = points;
-        (*numPlayersInGame)++;
+        scores[numPlayersInGame].name = malloc(strlen(name) + 1);
+        strcpy(scores[numPlayersInGame].name, str);
+        scores[numPlayersInGame].score = points;
+        numPlayersInGame++;
     }
 }
 
@@ -58,12 +66,14 @@ void freePlayers(char **players, const int numPlayers) {
 }
 
 
-void freeGames(struct Score **games, const int numGames, const int numPlayersPerGame) {
-    for (int i = 0; i < numGames; i++) {
-        for (int ii = 0; ii < numPlayersPerGame; ii++) {
-            free(games[i][ii].name);
+void freeGames(struct Game **games, const int numGames) {
+    for (int g = 0; g < numGames; g++) {
+        struct Game* game = games[g];
+        for (int s = 0; s < games[g]->scoreCount; s++) {
+            // free(game->scores[s].name);
+            // free(game[s].scores);
         }
-        free(games[i]);
+        free(game);
     }
     free(games);
 }
@@ -73,17 +83,16 @@ int main() {
     char **players = readPlayers(&numPlayers);
     int numGames = 0;
     int totalPlayersPlayedGames = 0;
-    int numPlayersPerGame;
-    struct Score *game;
-    struct Score **games = NULL;
-    while ((game = readGame(&numPlayersPerGame)) != NULL) {
+    struct Game *game;
+    struct Game **games = NULL;
+    while ((game = readGame()) != NULL) {
         games = realloc(games, (numGames + 1) * sizeof(struct Score *));
         games[numGames] = game;
-        totalPlayersPlayedGames += numPlayersPerGame;
+        totalPlayersPlayedGames += game->scoreCount;
         numGames++;
     }
     printf("%d %d", numGames, totalPlayersPlayedGames);
     free(game);
-    freeGames(games, numGames, numPlayersPerGame);
+    freeGames(games, numGames);
     freePlayers(players, numPlayers);
 }
