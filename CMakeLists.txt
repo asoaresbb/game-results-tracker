@@ -1,6 +1,7 @@
 cmake_minimum_required(VERSION 3.27)
-project(untitled C)
+project(eFolioB C)
 
 set(CMAKE_C_STANDARD 11)
 
-add_executable(eFolioB mainB.c)
+add_executable(exerciseA.exe mainA.c)
+add_executable(exerciseB.exe mainB.c)
