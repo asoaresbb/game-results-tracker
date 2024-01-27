@@ -58,7 +58,7 @@ void freePlayers(char **players, const int numPlayers) {
 }
 
 
-void freeGames(struct Score **games, int numGames, int numPlayersInGame) {
+void freeGames(struct Score **games, const int numGames, const int numPlayersInGame) {
     for (int i = 0; i < numGames; i++) {
         for (int ii = 0; ii < numPlayersInGame; ii++) {
             free(games[i][ii].name);
