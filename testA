@@ -12,10 +12,7 @@ EOF
 expected_output="4 57"
 
 output_data=$(echo "$input_data" | ./exerciseA.exe)
-if [ "$expected_output" = "$output_data" ]; then
-    echo "Test passed! ✅ "
-else
-    echo "Test failed! ❌ "
+if [ "$expected_output" != "$output_data" ]; then
     echo "  Expected: $expected_output"
     echo "  Actual  : $output_data"
     exit 1

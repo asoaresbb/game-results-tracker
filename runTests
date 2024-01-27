@@ -7,10 +7,10 @@ test_scripts=$(ls test* 2>/dev/null)
 for script in $test_scripts; do
   echo "Running $script..."
   if sh "$script"; then
-    echo "Test passed."
+    echo "Test passed! ✅ "
     passed_tests=$((passed_tests + 1))
   else
-    echo "Test failed."
+    echo "Test failed! ❌ "
     failed_tests=$((failed_tests + 1))
   fi
   echo "------------------------"
