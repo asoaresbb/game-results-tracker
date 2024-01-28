@@ -15,21 +15,25 @@ struct Player {
     int totalPoints;
 };
 
+struct PlayersInfo {
+    struct Player *players;
+    int numPlayers;
+};
 
-struct Player *readPlayers(int *numPlayers) {
-    struct Player *players = NULL;
-    *numPlayers = 0;
+
+struct PlayersInfo readPlayers() {
+    struct PlayersInfo playersInfo = {NULL,0};
     while (1) {
         char str[100];
-        players = realloc(players, (*numPlayers + 1) * sizeof(struct Player));
+        playersInfo.players = realloc(playersInfo.players, (playersInfo.numPlayers + 1) * sizeof(struct Player));
         const char *fgetsRes = fgets(str, sizeof(str), stdin);
-        if (fgetsRes == NULL || str[0] == '\n') return players;
+        if (fgetsRes == NULL || str[0] == '\n') return playersInfo;
         replaceNewLineByEnfOfStr(str);
         struct Player player = {};
         player.name = malloc(strlen(str) + 1);
         strcpy(player.name, str);
-        players[*numPlayers] = player;
-        (*numPlayers)++;
+        playersInfo.players[playersInfo.numPlayers] = player;
+        playersInfo.numPlayers++;
     }
 }
 
@@ -44,17 +48,17 @@ struct Game {
     int playersCount;
 };
 
-struct Player *findPlayer(struct Player *players, int numPlayers, const char *playerName) {
-    for (int i = 0; i < numPlayers; i++) {
-        if (strcmp(players[i].name, playerName) == 0) {
-            return &players[i];
+struct Player *findPlayer(struct PlayersInfo playersInfo, const char *playerName) {
+    for (int i = 0; i < playersInfo.numPlayers; i++) {
+        if (strcmp(playersInfo.players[i].name, playerName) == 0) {
+            return &playersInfo.players[i];
         }
     }
     fprintf(stderr, "player not found %s", playerName);
     exit(1);
 }
 
-struct Game *readGame(struct Player *players, const int numPlayers) {
+struct Game *readGame(struct PlayersInfo playersInfo) {
     struct Game *game = malloc(sizeof(struct Game));
     while (1) {
         char str[100];
@@ -68,17 +72,17 @@ struct Game *readGame(struct Player *players, const int numPlayers) {
         replaceNewLineByEnfOfStr(str);
         const char *playerName = strtok(str, ":");
         const int points = atoi(strtok(NULL, ":"));
-        game->scores[game->playersCount].player = findPlayer(players, numPlayers, playerName);
+        game->scores[game->playersCount].player = findPlayer(playersInfo, playerName);
         game->scores[game->playersCount].points = points;
         game->playersCount++;
     }
 }
 
-void freePlayers(struct Player *players, const int numPlayers) {
-    for (int i = 0; i < numPlayers; i++) {
-        free(players[i].name);
+void freePlayers(struct PlayersInfo playersInfo) {
+    for (int i = 0; i < playersInfo.numPlayers; i++) {
+        free(playersInfo.players[i].name);
     }
-    free(players);
+    free(playersInfo.players);
 }
 
 void freeGames(struct Game *games, const int numGames) {
@@ -89,10 +93,10 @@ void freeGames(struct Game *games, const int numGames) {
     free(games);
 }
 
-struct Game *readGames(int *numGames, struct Player *players, const int numPlayers) {
+struct Game *readGames(int *numGames, struct PlayersInfo playersInfo) {
     struct Game *games = NULL;
     const struct Game *game = NULL;
-    while ((game = readGame(players, numPlayers)) != NULL) {
+    while ((game = readGame(playersInfo)) != NULL) {
         games = realloc(games, (*numGames + 1) * sizeof(struct Game));
         games[*numGames] = *game;
         (*numGames)++;
@@ -146,26 +150,25 @@ int comparePlayers(const void *a, const void *b) {
     return strcmp(playerA->name, playerB->name);
 }
 
-void sortPlayers(struct Player *players, const int numPlayers) {
-    qsort(players, numPlayers, sizeof(struct Player), comparePlayers);
+void sortPlayers(struct PlayersInfo playersInfo) {
+    qsort(playersInfo.players, playersInfo.numPlayers, sizeof(struct Player), comparePlayers);
 }
 
-void printPlayerStats(const struct Player *players, const int numPlayers) {
-    for (int i = 0; i < numPlayers; i++) {
-        const struct Player player = players[i];
+void printPlayerStats(struct PlayersInfo playersInfo) {
+    for (int i = 0; i < playersInfo.numPlayers; i++) {
+        const struct Player player = playersInfo.players[i];
         printf("%s - %d pontos, %d vitorias.\n", player.name, player.totalPoints, player.totalWins);
     }
 }
 
 int main() {
-    int numPlayers;
-    struct Player *players = readPlayers(&numPlayers);
+    const struct PlayersInfo playersInfo = readPlayers();
     int numGames = 0;
-    struct Game *games = readGames(&numGames, players, numPlayers);
+    struct Game *games = readGames(&numGames, playersInfo);
     calculateWinCounts(games, numGames);
     calculateTotalPoints(games, numGames);
-    sortPlayers(players, numPlayers);
-    printPlayerStats(players, numPlayers);
-    freePlayers(players, numPlayers);
+    sortPlayers(playersInfo);
+    printPlayerStats(playersInfo);
+    freePlayers(playersInfo);
     freeGames(games, numGames);
 }
