@@ -1,6 +1,6 @@
 #!/bin/sh
 
-gcc mainB.c -o exerciseB.exe
+gcc mainC.c -o exerciseC.exe
 
 input_data=$(cat <<EOF
 Pierre Zimmermann
@@ -19,8 +19,8 @@ Michal Klukowski: 3
 Bauke Muller: 4
 
 Pierre Zimmermann: 4
-Piotr Gawrys: 5
-Michal Klukowski: 6
+Piotr Gawrys: 2
+Michal Klukowski: 4
 Bauke Muller: 3
 EOF
 )
@@ -33,10 +33,12 @@ Bauke Muller - 14 pontos, 1 vitorias.
 EOF
 )
 
-output_data=$(echo "$input_data" | ./exerciseB.exe)
+output_data=$(echo "$input_data" | ./exerciseC.exe)
 if [ "$expected_output" != "$output_data" ]; then
-    echo "  Expected: $expected_output"
-    echo "  Actual  : $output_data"
+    echo "  --- Expected -------------"
+    echo "$expected_output"
+    echo "  --- Actual ---------------"
+    echo "$output_data"
     exit 1
 fi
-rm exerciseB.exe
+rm exerciseC.exe

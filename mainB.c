@@ -23,7 +23,7 @@ char **readPlayers(int *numPlayers) {
 
 struct Score {
     char *name;
-    int score;
+    int points;
 };
 
 struct Game {
@@ -47,7 +47,7 @@ struct Game *readGame() {
         const int points = atoi(strtok(NULL, ":"));
         game->scores[game->playersCount].name = malloc(strlen(name) + 1);
         strcpy(game->scores[game->playersCount].name, name);
-        game->scores[game->playersCount].score = points;
+        game->scores[game->playersCount].points = points;
         game->playersCount++;
     }
 }
