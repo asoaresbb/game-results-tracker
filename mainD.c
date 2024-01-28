@@ -8,7 +8,6 @@ void replaceNewLineByEnfOfStr(char buffer[]) {
     buffer[strcspn(buffer, "\n")] = '\0';
 }
 
-
 typedef struct {
     char *name;
     int totalWins;
@@ -19,7 +18,6 @@ typedef struct {
     Player *players;
     int numPlayers;
 } PlayersInfo;
-
 
 PlayersInfo *readPlayers() {
     PlayersInfo *playersInfo = malloc(sizeof(PlayersInfo));
@@ -36,7 +34,6 @@ PlayersInfo *readPlayers() {
         playersInfo->numPlayers++;
     }
 }
-
 
 typedef struct {
     Player *player;
@@ -175,6 +172,7 @@ int main() {
     calculateTotalPoints(games);
     sortPlayers(playersInfo);
     printPlayerStats(playersInfo);
+
     freePlayers(playersInfo);
     freeGames(games);
 }
