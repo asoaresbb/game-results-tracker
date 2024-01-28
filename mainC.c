@@ -12,7 +12,7 @@ void replaceNewLineByEnfOfStr(char buffer[]) {
 
 struct Player {
     char *name;
-    int countWins;
+    int totalWins;
     int totalPoints;
 };
 
@@ -43,7 +43,6 @@ struct Score {
 struct Game {
     struct Score *scores;
     int playersCount;
-    char *winner;
 };
 
 struct Player *findPlayer(struct Player *players, int numPlayers, const char *playerName) {
@@ -102,13 +101,24 @@ struct Game *readGames(int *numGames, struct Player *players, const int numPlaye
     return games;
 }
 
-void calculateMaxScores(const struct Game *games, const int numGames) {
+int calculateMaxScore(const struct Game game) {
+    int maxScore = -INT_MIN;
+    for (int s = 0; s < game.playersCount; s++) {
+        if (game.scores[s].points > maxScore) {
+            maxScore = game.scores[s].points;
+        }
+    }
+    return maxScore;
+}
+
+void calculateWinCounts(const struct Game *games, const int numGames) {
     for (int g = 0; g < numGames; g++) {
         const struct Game game = games[g];
-        int maxScore = -INT_MIN;
+        const int maxScore = calculateMaxScore(game);
         for (int s = 0; s < game.playersCount; s++) {
-            if (game.scores[s].points > maxScore) {
-                maxScore = game.scores[s].points;
+            const struct Score score = game.scores[s];
+            if (score.points == maxScore) {
+                score.player->totalWins++;
             }
         }
     }
@@ -126,10 +136,10 @@ void calculateTotalPoints(const struct Game *games, const int numGames) {
     }
 }
 
-void printPlayerStats(const struct Player *players, const int numPlayers, struct Game *game, int numGames) {
+void printPlayerStats(const struct Player *players, const int numPlayers) {
     for (int i = 0; i < numPlayers; i++) {
         const struct Player player = players[i];
-        printf("%s - %d pontos\n", player.name, player.totalPoints);
+        printf("%s - %d pontos, %d vitorias.\n", player.name, player.totalPoints, player.totalWins);
     }
 }
 
@@ -138,9 +148,9 @@ int main() {
     struct Player *players = readPlayers(&numPlayers);
     int numGames = 0;
     struct Game *games = readGames(&numGames, players, numPlayers);
-    // calculateMaxScores(games, numGames);
+    calculateWinCounts(games, numGames);
     calculateTotalPoints(games, numGames);
-    printPlayerStats(players, numPlayers, games, numGames);
+    printPlayerStats(players, numPlayers);
     freePlayers(players, numPlayers);
     freeGames(games, numGames);
 }
