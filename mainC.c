@@ -83,8 +83,7 @@ void freePlayers(struct Player *players, const int numPlayers) {
 
 void freeGames(struct Game *games, const int numGames) {
     for (int i = 0; i < numGames; i++) {
-        const struct Game game = games[i];
-        free(game.scores);
+        free(games[i].scores);
     }
     free(games);
 }
