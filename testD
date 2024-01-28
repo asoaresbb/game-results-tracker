@@ -1,0 +1,44 @@
+#!/bin/sh
+
+gcc mainD.c -o exerciseD.exe
+
+input_data=$(cat <<EOF
+Pierre Zimmermann
+Piotr Gawrys
+Michal Klukowski
+Bauke Muller
+
+Pierre Zimmermann: 8
+Piotr Gawrys: 6
+Michal Klukowski: 14
+Bauke Muller: 7
+
+Pierre Zimmermann: 1
+Piotr Gawrys: 2
+Michal Klukowski: 3
+Bauke Muller: 4
+
+Pierre Zimmermann: 4
+Piotr Gawrys: 5
+Michal Klukowski: 6
+Bauke Muller: 3
+EOF
+)
+
+expected_output=$(cat <<EOF
+Michal Klukowski - 23 pontos, 2 vitorias.
+Bauke Muller - 14 pontos, 1 vitorias.
+Pierre Zimmermann - 13 pontos, 0 vitorias.
+Piotr Gawrys - 13 pontos, 0 vitorias.
+EOF
+)
+
+output_data=$(echo "$input_data" | ./exerciseD.exe)
+if [ "$expected_output" != "$output_data" ]; then
+    echo "  --- Expected -------------"
+    echo "$expected_output"
+    echo "  --- Actual ---------------"
+    echo "$output_data"
+    exit 1
+fi
+rm exerciseD.exe
