@@ -51,9 +51,8 @@ typedef struct {
 
 Player *findPlayer(const PlayersInfo *playersInfo, const char *playerName) {
     for (int i = 0; i < playersInfo->numPlayers; i++) {
-        if (strcmp(playersInfo->players[i].name, playerName) == 0) {
+        if (strcmp(playersInfo->players[i].name, playerName) == 0)
             return &playersInfo->players[i];
-        }
     }
     fprintf(stderr, "player not found %s", playerName);
     exit(1);
@@ -67,8 +66,7 @@ Game *readGame(const PlayersInfo *playersInfo) {
         game->scores = realloc(game->scores, (game->playersCount + 1) * sizeof(Score));
         const char *fgetsRes = fgets(str, sizeof(str), stdin);
         if (fgetsRes == NULL || str[0] == '\n') {
-            if (game->playersCount == 0)
-                return NULL;
+            if (game->playersCount == 0) return NULL;
             return game;
         }
         replaceNewLineByEnfOfStr(str);
@@ -90,8 +88,7 @@ void freePlayers(PlayersInfo *playersInfo) {
 
 void freeGames(GamesInfo *gamesInfo) {
     for (int i = 0; i < gamesInfo->numGames; i++) {
-        const Game game = gamesInfo->games[i];
-        free(game.scores);
+        free(gamesInfo->games[i].scores);
     }
     free(gamesInfo->games);
     free(gamesInfo);
@@ -112,9 +109,8 @@ GamesInfo *readGames(const PlayersInfo *playersInfo) {
 int calculateMaxScore(const Game game) {
     int maxScore = -INT_MIN;
     for (int s = 0; s < game.playersCount; s++) {
-        if (game.scores[s].points > maxScore) {
+        if (game.scores[s].points > maxScore)
             maxScore = game.scores[s].points;
-        }
     }
     return maxScore;
 }
@@ -125,9 +121,8 @@ void calculateWinCounts(const GamesInfo *gamesInfo) {
         const int maxScore = calculateMaxScore(game);
         for (int s = 0; s < game.playersCount; s++) {
             const Score score = game.scores[s];
-            if (score.points == maxScore) {
+            if (score.points == maxScore)
                 score.player->totalWins++;
-            }
         }
     }
 }
@@ -146,12 +141,10 @@ void calculateTotalPoints(const GamesInfo *gamesInfo) {
 int comparePlayers(const void *a, const void *b) {
     const Player *playerA = a;
     const Player *playerB = b;
-    if (playerA->totalWins != playerB->totalWins) {
+    if (playerA->totalWins != playerB->totalWins)
         return playerB->totalWins - playerA->totalWins;
-    }
-    if (playerA->totalPoints != playerB->totalPoints) {
+    if (playerA->totalPoints != playerB->totalPoints)
         return playerB->totalPoints - playerA->totalPoints;
-    }
     return strcmp(playerA->name, playerB->name);
 }
 
