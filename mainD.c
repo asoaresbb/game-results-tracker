@@ -21,15 +21,14 @@ typedef struct {
 
 PlayersInfo *readPlayers() {
     PlayersInfo *playersInfo = malloc(sizeof(PlayersInfo));
+    playersInfo->numPlayers = 0;
     while (1) {
         char str[100];
         playersInfo->players = realloc(playersInfo->players, (playersInfo->numPlayers + 1) * sizeof(Player));
         const char *fgetsRes = fgets(str, sizeof(str), stdin);
         if (fgetsRes == NULL || str[0] == '\n') return playersInfo;
         replaceNewLineByEnfOfStr(str);
-        Player player = {NULL, 0, 0};
-        player.name = malloc(strlen(str) + 1);
-        strcpy(player.name, str);
+        const Player player = {.name = strdup(str)};
         playersInfo->players[playersInfo->numPlayers] = player;
         playersInfo->numPlayers++;
     }
@@ -62,6 +61,7 @@ Player *findPlayer(const PlayersInfo *playersInfo, const char *playerName) {
 
 Game *readGame(const PlayersInfo *playersInfo) {
     Game *game = malloc(sizeof(Game));
+    game->playersCount = 0;
     while (1) {
         char str[100];
         game->scores = realloc(game->scores, (game->playersCount + 1) * sizeof(Score));
@@ -99,6 +99,7 @@ void freeGames(GamesInfo *gamesInfo) {
 
 GamesInfo *readGames(const PlayersInfo *playersInfo) {
     GamesInfo *gamesInfo = malloc(sizeof(GamesInfo));
+    gamesInfo->numGames = 0;
     const Game *game = NULL;
     while ((game = readGame(playersInfo)) != NULL) {
         gamesInfo->games = realloc(gamesInfo->games, (gamesInfo->numGames + 1) * sizeof(Game));
