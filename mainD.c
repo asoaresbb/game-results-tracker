@@ -127,7 +127,6 @@ void calculateWinCounts(const GamesInfo *gamesInfo) {
     }
 }
 
-
 void calculateTotalPoints(const GamesInfo *gamesInfo) {
     for (int g = 0; g < gamesInfo->numGames; g++) {
         const Game game = gamesInfo->games[g];
@@ -138,7 +137,7 @@ void calculateTotalPoints(const GamesInfo *gamesInfo) {
     }
 }
 
-int comparePlayers(const void *a, const void *b) {
+int byWinsPointsName(const void *a, const void *b) {
     const Player *playerA = a;
     const Player *playerB = b;
     if (playerA->totalWins != playerB->totalWins)
@@ -148,8 +147,10 @@ int comparePlayers(const void *a, const void *b) {
     return strcmp(playerA->name, playerB->name);
 }
 
-void sortPlayers(const PlayersInfo *playersInfo) {
-    qsort(playersInfo->players, playersInfo->numPlayers, sizeof(Player), comparePlayers);
+typedef int (*CompareFunction)(const void *, const void *);
+
+void sortPlayers(const PlayersInfo *playersInfo, const CompareFunction compareFunction) {
+    qsort(playersInfo->players, playersInfo->numPlayers, sizeof(Player), compareFunction);
 }
 
 void printPlayerStats(const PlayersInfo *playersInfo) {
@@ -164,7 +165,7 @@ int main() {
     GamesInfo *games = readGames(playersInfo);
     calculateWinCounts(games);
     calculateTotalPoints(games);
-    sortPlayers(playersInfo);
+    sortPlayers(playersInfo, byWinsPointsName);
     printPlayerStats(playersInfo);
 
     freePlayers(playersInfo);
