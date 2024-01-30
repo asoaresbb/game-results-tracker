@@ -149,8 +149,8 @@ int byWinsPointsName(const void *a, const void *b) {
 
 typedef int (*CompareFunction)(const void *, const void *);
 
-void sortPlayers(const Players *playersInfo, const CompareFunction compareFunction) {
-    qsort(playersInfo->players, playersInfo->numPlayers, sizeof(Player), compareFunction);
+void sortPlayers(const Players *players, const CompareFunction comparePlayers) {
+    qsort(players->players, players->numPlayers, sizeof(Player), comparePlayers);
 }
 
 void printPlayerStats(const Players *players) {
