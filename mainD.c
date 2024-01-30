@@ -15,22 +15,22 @@ typedef struct {
 } Player;
 
 typedef struct {
-    Player *players;
-    int numPlayers;
+    Player *items;
+    int length;
 } Players;
 
 Players *readPlayers() {
     Players *players = malloc(sizeof(Players));
-    players->numPlayers = 0;
+    players->length = 0;
     while (1) {
         char str[100];
-        players->players = realloc(players->players, (players->numPlayers + 1) * sizeof(Player));
+        players->items = realloc(players->items, (players->length + 1) * sizeof(Player));
         const char *fgetsRes = fgets(str, sizeof(str), stdin);
         if (fgetsRes == NULL || str[0] == '\n') return players;
         replaceNewLineByEnfOfStr(str);
         const Player player = {.name = strdup(str)};
-        players->players[players->numPlayers] = player;
-        players->numPlayers++;
+        players->items[players->length] = player;
+        players->length++;
     }
 }
 
@@ -41,18 +41,18 @@ typedef struct {
 
 typedef struct {
     Score *scores;
-    int playersCount;
+    int numPlayers;
 } Game;
 
 typedef struct {
-    Game *games;
-    int numGames;
+    Game *items;
+    int length;
 } Games;
 
 Player *findPlayer(const Players *players, const char *playerName) {
-    for (int i = 0; i < players->numPlayers; i++) {
-        if (strcmp(players->players[i].name, playerName) == 0)
-            return &players->players[i];
+    for (int i = 0; i < players->length; i++) {
+        if (strcmp(players->items[i].name, playerName) == 0)
+            return &players->items[i];
     }
     fprintf(stderr, "player not found %s", playerName);
     exit(1);
@@ -60,55 +60,55 @@ Player *findPlayer(const Players *players, const char *playerName) {
 
 Game *readGame(const Players *players) {
     Game *game = malloc(sizeof(Game));
-    game->playersCount = 0;
+    game->numPlayers = 0;
     while (1) {
         char str[100];
-        game->scores = realloc(game->scores, (game->playersCount + 1) * sizeof(Score));
+        game->scores = realloc(game->scores, (game->numPlayers + 1) * sizeof(Score));
         const char *fgetsRes = fgets(str, sizeof(str), stdin);
         if (fgetsRes == NULL || str[0] == '\n') {
-            if (game->playersCount == 0) return NULL;
+            if (game->numPlayers == 0) return NULL;
             return game;
         }
         replaceNewLineByEnfOfStr(str);
         const char *playerName = strtok(str, ":");
         const int points = atoi(strtok(NULL, ":"));
-        game->scores[game->playersCount].player = findPlayer(players, playerName);
-        game->scores[game->playersCount].points = points;
-        game->playersCount++;
+        game->scores[game->numPlayers].player = findPlayer(players, playerName);
+        game->scores[game->numPlayers].points = points;
+        game->numPlayers++;
     }
 }
 
 void freePlayers(Players *players) {
-    for (int i = 0; i < players->numPlayers; i++) {
-        free(players->players[i].name);
+    for (int i = 0; i < players->length; i++) {
+        free(players->items[i].name);
     }
-    free(players->players);
+    free(players->items);
     free(players);
 }
 
 void freeGames(Games *games) {
-    for (int i = 0; i < games->numGames; i++) {
-        free(games->games[i].scores);
+    for (int i = 0; i < games->length; i++) {
+        free(games->items[i].scores);
     }
-    free(games->games);
+    free(games->items);
     free(games);
 }
 
 Games *readGames(const Players *players) {
     Games *games = malloc(sizeof(Games));
-    games->numGames = 0;
+    games->length = 0;
     const Game *game = NULL;
     while ((game = readGame(players)) != NULL) {
-        games->games = realloc(games->games, (games->numGames + 1) * sizeof(Game));
-        games->games[games->numGames] = *game;
-        games->numGames++;
+        games->items = realloc(games->items, (games->length + 1) * sizeof(Game));
+        games->items[games->length] = *game;
+        games->length++;
     }
     return games;
 }
 
 int calculateMaxScore(const Game game) {
     int maxScore = -INT_MIN;
-    for (int s = 0; s < game.playersCount; s++) {
+    for (int s = 0; s < game.numPlayers; s++) {
         if (game.scores[s].points > maxScore)
             maxScore = game.scores[s].points;
     }
@@ -116,10 +116,10 @@ int calculateMaxScore(const Game game) {
 }
 
 void calculateWinCounts(const Games *games) {
-    for (int g = 0; g < games->numGames; g++) {
-        const Game game = games->games[g];
+    for (int g = 0; g < games->length; g++) {
+        const Game game = games->items[g];
         const int maxScore = calculateMaxScore(game);
-        for (int s = 0; s < game.playersCount; s++) {
+        for (int s = 0; s < game.numPlayers; s++) {
             const Score score = game.scores[s];
             if (score.points == maxScore)
                 score.player->totalWins++;
@@ -128,9 +128,9 @@ void calculateWinCounts(const Games *games) {
 }
 
 void calculateTotalPoints(const Games *games) {
-    for (int g = 0; g < games->numGames; g++) {
-        const Game game = games->games[g];
-        for (int p = 0; p < game.playersCount; p++) {
+    for (int g = 0; g < games->length; g++) {
+        const Game game = games->items[g];
+        for (int p = 0; p < game.numPlayers; p++) {
             const Score score = game.scores[p];
             score.player->totalPoints += score.points;
         }
@@ -150,12 +150,12 @@ int byWinsPointsName(const void *a, const void *b) {
 typedef int (*CompareFunction)(const void *, const void *);
 
 void sortPlayers(const Players *players, const CompareFunction comparePlayers) {
-    qsort(players->players, players->numPlayers, sizeof(Player), comparePlayers);
+    qsort(players->items, players->length, sizeof(Player), comparePlayers);
 }
 
 void printPlayerStats(const Players *players) {
-    for (int i = 0; i < players->numPlayers; i++) {
-        const Player player = players->players[i];
+    for (int i = 0; i < players->length; i++) {
+        const Player player = players->items[i];
         printf("%s - %d pontos, %d vitorias.\n", player.name, player.totalPoints, player.totalWins);
     }
 }
