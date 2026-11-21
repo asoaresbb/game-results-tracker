@@ -105,7 +105,7 @@ struct Game *readGames(int *numGames, struct Player *players, const int numPlaye
 }
 
 int calculateMaxScore(const struct Game game) {
-    int maxScore = -INT_MIN;
+    int maxScore = INT_MIN; // O menor int possível: qualquer pontuação é maior ou igual
     for (int s = 0; s < game.playersCount; s++) {
         if (game.scores[s].points > maxScore) {
             maxScore = game.scores[s].points;

@@ -110,7 +110,7 @@ Games *readGames(const Players *players) {
 }
 
 int calculateMaxScore(const Game game) {
-    int maxScore = -INT_MIN;
+    int maxScore = INT_MIN; // O menor int possível: qualquer pontuação é maior ou igual
     for (int s = 0; s < game.numPlayers; s++) {
         if (game.scores[s].points > maxScore)
             maxScore = game.scores[s].points;
