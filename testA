@@ -1,6 +1,6 @@
 #!/bin/sh
 
-gcc mainA.c -o exerciseA.exe
+gcc -Wall -g -fsanitize=address mainA.c -o exerciseA.exe
 
 input_data=$(cat <<EOF
 Pierre Zimmermann

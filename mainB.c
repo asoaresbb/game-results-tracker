@@ -32,7 +32,7 @@ struct Game {
 };
 
 struct Game *readGame() {
-    struct Game *game = malloc(sizeof(struct Game));
+    struct Game *game = calloc(1, sizeof(struct Game));
     while (1) {
         char str[100];
         game->scores = realloc(game->scores, (game->playersCount + 1) * sizeof(struct Score));

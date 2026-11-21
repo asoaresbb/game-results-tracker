@@ -55,7 +55,7 @@ struct Player *findPlayer(struct Player *players, int numPlayers, const char *pl
 }
 
 struct Game *readGame(struct Player *players, const int numPlayers) {
-    struct Game *game = malloc(sizeof(struct Game));
+    struct Game *game = calloc(1, sizeof(struct Game));
     while (1) {
         char str[100];
         game->scores = realloc(game->scores, (game->playersCount + 1) * sizeof(struct Score));

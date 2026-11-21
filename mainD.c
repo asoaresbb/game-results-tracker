@@ -20,8 +20,7 @@ typedef struct {
 } Players;
 
 Players *readPlayers() {
-    Players *players = malloc(sizeof(Players));
-    players->length = 0;
+    Players *players = calloc(1, sizeof(Players));
     while (1) {
         char str[100];
         players->items = realloc(players->items, (players->length + 1) * sizeof(Player));
@@ -59,8 +58,7 @@ Player *findPlayer(const Players *players, const char *playerName) {
 }
 
 Game *readGame(const Players *players) {
-    Game *game = malloc(sizeof(Game));
-    game->numPlayers = 0;
+    Game *game = calloc(1, sizeof(Game));
     while (1) {
         char str[100];
         game->scores = realloc(game->scores, (game->numPlayers + 1) * sizeof(Score));
@@ -95,8 +93,7 @@ void freeGames(Games *games) {
 }
 
 Games *readGames(const Players *players) {
-    Games *games = malloc(sizeof(Games));
-    games->length = 0;
+    Games *games = calloc(1, sizeof(Games));
     const Game *game = NULL;
     while ((game = readGame(players)) != NULL) {
         games->items = realloc(games->items, (games->length + 1) * sizeof(Game));
