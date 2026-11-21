@@ -61,8 +61,12 @@ struct Game *readGame(struct Player *players, const int numPlayers) {
         game->scores = realloc(game->scores, (game->playersCount + 1) * sizeof(struct Score));
         const char *fgetsRes = fgets(str, sizeof(str), stdin);
         if (fgetsRes == NULL || str[0] == '\n') {
-            if (game->playersCount == 0)
+            if (game->playersCount == 0) {
+                // Não havia mais jogos: libertar o que foi alocado para este
+                free(game->scores);
+                free(game);
                 return NULL;
+            }
             return game;
         }
         replaceNewLineByEnfOfStr(str);
@@ -90,11 +94,12 @@ void freeGames(struct Game *games, const int numGames) {
 
 struct Game *readGames(int *numGames, struct Player *players, const int numPlayers) {
     struct Game *games = NULL;
-    const struct Game *game = NULL;
+    struct Game *game = NULL;
     while ((game = readGame(players, numPlayers)) != NULL) {
         games = realloc(games, (*numGames + 1) * sizeof(struct Game));
         games[*numGames] = *game;
         (*numGames)++;
+        free(game); // O jogo foi copiado para o array; a cópia original já não é precisa
     }
     return games;
 }
