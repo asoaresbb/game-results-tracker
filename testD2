@@ -1,0 +1,42 @@
+#!/bin/sh
+
+# Regra do enunciado: só ganha quem tiver 2 ou mais pontos e nenhum outro tiver mais.
+# O primeiro jogo não tem vencedor (máximo de 1 ponto); o segundo e o terceiro têm empates.
+
+gcc -Wall -g -fsanitize=address mainD.c -o exerciseD2.exe
+
+input_data=$(cat <<END
+Ana
+Rui
+Eva
+
+Ana: 1
+Rui: 1
+Eva: 0
+
+Ana: 2
+Rui: 2
+Eva: 1
+
+Ana: 0
+Rui: 5
+Eva: 5
+END
+)
+
+expected_output=$(cat <<END
+Rui - 8 pontos, 2 vitorias.
+Eva - 6 pontos, 1 vitorias.
+Ana - 3 pontos, 1 vitorias.
+END
+)
+
+output_data=$(echo "$input_data" | ./exerciseD2.exe)
+if [ "$expected_output" != "$output_data" ]; then
+    echo "  --- Expected -------------"
+    echo "$expected_output"
+    echo "  --- Actual ---------------"
+    echo "$output_data"
+    exit 1
+fi
+rm exerciseD2.exe

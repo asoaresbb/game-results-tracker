@@ -4,6 +4,9 @@
 #include <stdlib.h>
 #include <string.h>
 
+// Só ganha quem tiver pelo menos 2 pontos e nenhum outro jogador tiver mais
+#define MIN_POINTS_TO_WIN 2
+
 void replaceNewLineByEnfOfStr(char buffer[]) {
     buffer[strcspn(buffer, "\n")] = '\0';
 }
@@ -124,7 +127,7 @@ void calculateWinCounts(const Games *games) {
         const int maxScore = calculateMaxScore(game);
         for (int s = 0; s < game.numPlayers; s++) {
             const Score score = game.scores[s];
-            if (score.points == maxScore)
+            if (score.points == maxScore && score.points >= MIN_POINTS_TO_WIN)
                 score.player->totalWins++;
         }
     }
